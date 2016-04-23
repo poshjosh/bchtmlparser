@@ -1,5 +1,6 @@
 package com.bc.htmlparser;
 
+import com.bc.testutil.TestBase;
 import java.util.Date;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.SimpleAttributeSet;
@@ -11,7 +12,7 @@ import org.junit.Test;
  */
 public class AttributeSetTest {
     
-    private final TestBase testBase = new TestBaseImpl();
+    private final TestBase testBase = new HtmlparserTestBase();
     
     @Test
     public void testIsEqual() {

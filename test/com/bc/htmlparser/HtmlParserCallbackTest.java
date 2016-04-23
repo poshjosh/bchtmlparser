@@ -1,5 +1,6 @@
 package com.bc.htmlparser;
 
+import com.bc.testutil.TestBase;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.text.MutableAttributeSet;
@@ -29,7 +30,7 @@ public class HtmlParserCallbackTest {
     private final HTML.Tag [] tagsToAccept = null;
     private final HTML.Tag [] tagsToReject = { XHTMLTag.XML, HTML.Tag.SCRIPT, HTML.Tag.STYLE };
     
-    private final TestBase testBase = new TestBaseImpl();
+    private final TestBase testBase = new HtmlparserTestBase();
     
     public HtmlParserCallbackTest() { }
 

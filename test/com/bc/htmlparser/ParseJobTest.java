@@ -1,5 +1,6 @@
 package com.bc.htmlparser;
 
+import com.bc.testutil.TestBase;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class ParseJobTest {
 //        HTML.Tag.BR, HTML.Tag.P, HTML.Tag.SPAN, 
     };
     
-    private final TestBase testBase = new TestBaseImpl();
+    private final TestBase testBase = new HtmlparserTestBase();
     
     public ParseJobTest() { }
     
