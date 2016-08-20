@@ -286,34 +286,43 @@ public class ParseJob extends ParserDelegator {
     
     private Filter<HTML.Tag> buildTagFilter() {
         
+        final List<Filter<HTML.Tag>> filterList = new LinkedList();
+        
         Filter<HTML.Tag> accept = this.tagsToAccept == null ? null : new FilterImpl(this.tagsToAccept);
         Filter<HTML.Tag> reject = this.tagsToReject == null ? null : new FilterNegationImpl(this.tagsToReject);
         
-        return this.getAndFilter(accept, reject);
+        if(this.tagsToAccept != null) {
+            filterList.add(new FilterImpl(this.tagsToAccept));
+        }
+        
+        if(this.tagsToReject != null) {
+            filterList.add(new FilterNegationImpl(this.tagsToReject));
+        }
+        
+        if(this.parserCallback.getTagFilter() != null) {
+            filterList.add(this.parserCallback.getTagFilter());
+        }
+        
+        return new AndFilter(filterList);
     }
 
     private Filter<AttributeSet> buildAttributeSetFilter() {
         
-        Filter<AttributeSet> accept = this.attributeSetsToAccept == null ? 
-                null : new AttributeSetFilter(this.attributeSetsToAccept);
-        Filter<AttributeSet> reject = this.attributeSetsToReject == null ?
-                null : new AttributeSetNegationFilter(this.attributeSetsToReject);
+        final List<Filter<AttributeSet>> filterList = new LinkedList();
         
-        return this.getAndFilter(accept, reject);
-    }
-    
-    private <E> Filter<E> getAndFilter(Filter<E> a, Filter<E> b) {
-        Filter<E> output;
-        if(a == null && b == null) {
-            output = null;
-        }else if(a != null && b != null) {
-            output = new AndFilter(a, b);
-        }else if(a != null) {
-            output = a;
-        }else{
-            output = b;
+        if(this.attributeSetsToAccept != null) {
+            filterList.add(new AttributeSetFilter(this.attributeSetsToAccept));
         }
-        return output;
+        
+        if(this.attributeSetsToReject != null) {
+            filterList.add(new AttributeSetNegationFilter(this.attributeSetsToReject));
+        }
+        
+        if(this.parserCallback.getAttributSetFilter() != null) {
+            filterList.add(this.parserCallback.getAttributSetFilter());
+        }
+        
+        return new AndFilter(filterList);
     }
     
     private void addTagsToAccept(HTML.Tag... tagsToAdd) {

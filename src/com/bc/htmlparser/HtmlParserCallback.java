@@ -106,7 +106,7 @@ logger.log(Level.FINER, "{0}. AFTER Format:{1}", new Object[] {logger.getName(),
 
     @Override
     public void handleStartTag(javax.swing.text.html.HTML.Tag t, MutableAttributeSet a, int pos) {
-        
+//System.out.println("========================================================"+this.tagFilter);        
         final boolean acceptTag = this.accept(t);
         
         final boolean acceptAttributeSet = this.accept(a);
@@ -148,7 +148,7 @@ new Object[] {logger.getName(), t, acceptTag, acceptAttributeSet});
 
     @Override
     public void handleSimpleTag(javax.swing.text.html.HTML.Tag t, MutableAttributeSet a, int pos) {
-
+//System.out.println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooo "+this.attributeSetFilter);
         final boolean acceptTag = this.accept(t);
         
         final boolean acceptAttributeSet = this.accept(a);
