@@ -27,27 +27,24 @@ import javax.swing.text.html.parser.ParserDelegator;
         String htmlToParse = null; // PUT HTML CONTENT HERE
 
         // To extract all DIV tags
-        parseJob.html(true);
-        parseJob.comments(false);
-        parseJob.accept(Tag.DIV);
-        parseJob.maxSeparators(2);
-        parseJob.separator("&ltBR/>\n");
         try{
-            StringBuilder output = parseJob.parse(htmlToParse);
+            StringBuilder output = parseJob.html(true)
+                .comments(false).accept(Tag.DIV)
+                .maxSeparators(2).separator("&lt;BR/>\n")
+                .parse(htmlToParse);
         }catch(IOException e) {
-            // 
+            e.printStackTrace(); 
         }
         
         // To extract plain text
         parseJob.reset();
-        parseJob.plainText(true);
-        parseJob.comments(false);
-        parseJob.maxSeparators(2);
-        parseJob.separator("\n");
         try{
-            StringBuilder output = parseJob.parse(htmlToParse);
+            StringBuilder output = 
+            parseJob.plainText(true).comments(false);
+            .maxSeparators(2).separator("\n")
+            .parse(htmlToParse);
         }catch(IOException e) {
-            // 
+            e.printStackTrace(); 
         }
  * </pre>
  * @author   chinomso bassey ikwuagwu
@@ -65,7 +62,7 @@ public class ParseJob extends ParserDelegator {
     private HtmlParserCallback parserCallback;
 
     public ParseJob() {  
-        this(new HtmlParserCallback());
+        this(new HtmlParserCallback()); 
     }
     
     public ParseJob(StringBuilder buffer) {  
@@ -287,9 +284,6 @@ public class ParseJob extends ParserDelegator {
     private Filter<HTML.Tag> buildTagFilter() {
         
         final List<Filter<HTML.Tag>> filterList = new LinkedList();
-        
-        Filter<HTML.Tag> accept = this.tagsToAccept == null ? null : new FilterImpl(this.tagsToAccept);
-        Filter<HTML.Tag> reject = this.tagsToReject == null ? null : new FilterNegationImpl(this.tagsToReject);
         
         if(this.tagsToAccept != null) {
             filterList.add(new FilterImpl(this.tagsToAccept));
