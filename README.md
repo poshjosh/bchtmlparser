@@ -4,10 +4,10 @@ A lightweight java library (10 classes) for parsing HTML tags of type javax.swin
    The HTML content to parse
             
             String html = 
-            "<html><head><title>This is the Title</title><link rel=\"_rel\" href=\"_href\"></head>" + 
+            "<html><head><title>This is the Title</title><link rel="${rel}" href="${href}"></head>" + 
             "<body><h2>This is the Heading</h2>" +
-            "<div id=\"page-data\" class=\"content-main\">This is some content</div>" +
-            "<a href=\"_href\"/><!-- This is some comment --></body></html>";
+            "<div id="page-data" class="content-main">This is some content</div>" +
+            "<a href="${href}"/><!-- This is some comment --></body></html>";
             
             ParseJob parseJob = new ParseJob();
 
