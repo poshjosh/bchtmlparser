@@ -1,8 +1,8 @@
 # bchtmlparser
 A lightweight java library (10 classes) for parsing HTML tags of type javax.swing.text.html.HTML.Tag
 
-            // The HTML content to parse
-            //
+            # The HTML content to parse
+            #
             String html = 
             "<html><head><title>This is the Title</title><link rel=\"_rel\" href=\"_href\"></head>" + 
             "<body><h2>This is the Heading</h2>" +
