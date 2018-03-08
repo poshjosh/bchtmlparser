@@ -1,0 +1,9 @@
+Add support for: 
+<?xml... ?>
+<%@... %> 
+${... } 
+etc
+
+Run ReadMe and observe the output carefully, some output misses body and html end tags
+
+
