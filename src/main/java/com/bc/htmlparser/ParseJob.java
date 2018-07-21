@@ -6,6 +6,7 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.parser.ParserDelegator;
@@ -70,7 +71,7 @@ public class ParseJob extends ParserDelegator {
     }
 
     public ParseJob(HtmlParserCallback parserCallback) {  
-        this.parserCallback = parserCallback;
+        this.parserCallback = Objects.requireNonNull(parserCallback);
     }
     
     /**
@@ -158,7 +159,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob accept(HTML.Tag tag) {
-        this.addTagsToAccept(tag);
+        // Assigment very important
+        this.tagsToAccept = this.add(tagsToAccept, tag);
         return this;
     }
     
@@ -168,7 +170,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob accept(HTML.Tag... tags) {
-        this.addTagsToAccept(tags);
+        // Assigment very important
+        this.tagsToAccept = this.addAll(tagsToAccept, tags);
         return this;
     }
     
@@ -178,7 +181,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob reject(HTML.Tag tag) {
-        this.addTagsToReject(tag);
+        // Assigment very important
+        this.tagsToReject = this.add(tagsToReject, tag);
         return this;
     }
     
@@ -188,7 +192,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob reject(HTML.Tag... tags) {
-        this.addTagsToReject(tags);
+        // Assigment very important
+        this.tagsToReject = this.addAll(tagsToReject, tags);
         return this;
     }
 
@@ -198,7 +203,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob accept(AttributeSet attributeSet) {
-        this.addAttributeSetsToAccept(attributeSet);
+        // Assigment very important
+        this.attributeSetsToAccept = this.add(attributeSetsToAccept, attributeSet);
         return this;
     }
     
@@ -208,7 +214,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob accept(AttributeSet... attributeSets) {
-        this.addAttributeSetsToAccept(attributeSets);
+        // Assigment very important
+        this.attributeSetsToAccept = this.addAll(attributeSetsToAccept, attributeSets);
         return this;
     }
     
@@ -218,7 +225,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob reject(AttributeSet attributeSet) {
-        this.addAttributeSetsToReject(attributeSet);
+        // Assigment very important
+        this.attributeSetsToReject = this.add(attributeSetsToReject, attributeSet);
         return this;
     }
     
@@ -228,7 +236,8 @@ public class ParseJob extends ParserDelegator {
      * @return this instance
      */
     public ParseJob reject(AttributeSet... attributeSets) {
-        this.addAttributeSetsToReject(attributeSets);
+        // Assigment very important
+        this.attributeSetsToReject = this.addAll(attributeSetsToReject, attributeSets);
         return this;
     }
 
@@ -268,10 +277,12 @@ public class ParseJob extends ParserDelegator {
     public ParseJob plainText(boolean plainText, boolean acceptScriptText, boolean acceptStyleText) {
         parserCallback.setOnlyPlainText(plainText);
         if(!acceptScriptText) {
-            this.addTagsToReject(HTML.Tag.SCRIPT);
+            // Assigment very important
+            this.tagsToReject = this.add(tagsToReject, HTML.Tag.SCRIPT);
         }
         if(!acceptStyleText) {
-            this.addTagsToReject(HTML.Tag.STYLE);
+        // Assigment very important
+        this.tagsToReject = this.add(tagsToReject, HTML.Tag.STYLE);
         }
         return this;
     }
@@ -283,59 +294,54 @@ public class ParseJob extends ParserDelegator {
     
     private Filter<HTML.Tag> buildTagFilter() {
         
-        final List<Filter<HTML.Tag>> filterList = new LinkedList();
+        List<Filter<HTML.Tag>> filterList = new LinkedList();
         
         if(this.tagsToAccept != null) {
-            filterList.add(new FilterImpl(this.tagsToAccept));
+            filterList = this.add(filterList, new FilterImpl(this.tagsToAccept));
         }
         
         if(this.tagsToReject != null) {
-            filterList.add(new FilterNegationImpl(this.tagsToReject));
+            filterList = this.add(filterList, new FilterNegationImpl(this.tagsToReject));
         }
         
         if(this.parserCallback.getTagFilter() != null) {
-            filterList.add(this.parserCallback.getTagFilter());
+            filterList = this.add(filterList, this.parserCallback.getTagFilter());
         }
         
-        return new AndFilter(filterList);
+        return and(filterList);
     }
 
     private Filter<AttributeSet> buildAttributeSetFilter() {
         
-        final List<Filter<AttributeSet>> filterList = new LinkedList();
+        List<Filter<AttributeSet>> filterList = new LinkedList();
         
         if(this.attributeSetsToAccept != null) {
-            filterList.add(new AttributeSetFilter(this.attributeSetsToAccept));
+            filterList = this.add(filterList, new AttributeSetFilter(this.attributeSetsToAccept));
         }
         
         if(this.attributeSetsToReject != null) {
-            filterList.add(new AttributeSetNegationFilter(this.attributeSetsToReject));
+            filterList = this.add(filterList, new AttributeSetNegationFilter(this.attributeSetsToReject));
         }
         
         if(this.parserCallback.getAttributSetFilter() != null) {
-            filterList.add(this.parserCallback.getAttributSetFilter());
+            filterList = this.add(filterList, this.parserCallback.getAttributSetFilter());
         }
         
-        return new AndFilter(filterList);
+        return and(filterList);
     }
     
-    private void addTagsToAccept(HTML.Tag... tagsToAdd) {
-        // Assigment very important
-        this.tagsToAccept = this.addAll(tagsToAccept, tagsToAdd);
+    private <E> List<E> add(List<E> buffer, E toAdd) {
+        if(toAdd == null) {
+            return buffer;
+        }
+        if(buffer == null) {
+            buffer = new LinkedList();
+        }
+        buffer.add(toAdd);
+        return buffer;
     }
-    private void addTagsToReject(HTML.Tag... tagsToAdd) {
-        // Assigment very important
-        this.tagsToReject = this.addAll(tagsToReject, tagsToAdd);
-    }
-    private void addAttributeSetsToAccept(AttributeSet... attributeSetsToAdd) {
-        // Assigment very important
-        this.attributeSetsToAccept = this.addAll(attributeSetsToAccept, attributeSetsToAdd);
-    }
-    private void addAttributeSetsToReject(AttributeSet... attributeSetsToAdd) {
-        // Assigment very important
-        this.attributeSetsToReject = this.addAll(attributeSetsToReject, attributeSetsToAdd);
-    }
-    private <E> List<E> addAll(List<E> buffer, E... toAdd) {
+
+    private <E> List<E> addAll(List<E> buffer, E[] toAdd) {
         if(toAdd == null) {
             return buffer;
         }
@@ -346,6 +352,16 @@ public class ParseJob extends ParserDelegator {
         return buffer;
     }
     
+    private <T> Filter<T> and(List<Filter<T>> filterList) {
+        return filterList.isEmpty() ? (t) -> false : filterList.size() == 1 ?
+                filterList.get(0) : new AndFilter(filterList);
+    }
+    
+    private <T> Filter<T> or(List<Filter<T>> filterList) {
+        return filterList.isEmpty() ? (t) -> false : filterList.size() == 1 ?
+                filterList.get(0) : new OrFilter(filterList);
+    }
+
     public void setParserCallback(HtmlParserCallback callback) {
         parserCallback = callback;
     }

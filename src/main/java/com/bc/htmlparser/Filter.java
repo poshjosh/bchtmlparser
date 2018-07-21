@@ -14,6 +14,7 @@ import java.io.Serializable;
  * @version 1.0
  * @since   1.0
  */
+@FunctionalInterface
 public interface Filter<E> extends Serializable {
     boolean accept(E e);
 }//~END

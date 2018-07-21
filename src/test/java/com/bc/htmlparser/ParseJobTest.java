@@ -1,10 +1,10 @@
 package com.bc.htmlparser;
 
-import com.bc.testutil.TestBase;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.Path;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTML.Tag;
 import org.junit.After;
@@ -57,11 +57,11 @@ public class ParseJobTest {
     public void testReset() throws FileNotFoundException, IOException {
         testBase.log(this.getClass(), "reset");
         
-        File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-        if(file == null) {
+        final Path path = testBase.findAnyPathEndingWith(".html", 0, 100, null);
+        if(path == null) {
             return;
         }
-        try(Reader source = testBase.getReader(file)) {
+        try(Reader source = testBase.getReader(path.toFile())) {
         
             ParseJob instance = new ParseJob();
             instance.accept(this.tagsToAccept).reject(this.tagsToReject);
@@ -93,11 +93,11 @@ public class ParseJobTest {
     public void testParse_Reader() throws FileNotFoundException, IOException {
         testBase.log(this.getClass(), "parse(Reader)");
         
-        File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-        if(file == null) {
+        final Path path = testBase.findAnyPathEndingWith(".html", null);
+        if(path == null) {
             return;
         }
-        try(Reader reader = testBase.getReader(file)) {
+        try(Reader reader = testBase.getReader(path.toFile())) {
         
             ParseJob instance = new ParseJob();
             instance.accept(this.tagsToAccept).reject(this.tagsToReject);
@@ -117,11 +117,11 @@ public class ParseJobTest {
     public void testParse_String() throws IOException {
         testBase.log(this.getClass(), "parse(String)");
         
-        File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-        if(file == null) {
+        final Path path = testBase.findAnyPathEndingWith(".html", null);
+        if(path == null) {
             return;
         }
-        String source = testBase.getContents(file);
+        String source = testBase.getContents(path.toFile());
         ParseJob instance = new ParseJob();
         instance.accept(this.tagsToAccept).reject(this.tagsToReject);
         instance.comments(true).maxSeparators(1).separator("\n");
@@ -139,11 +139,11 @@ public class ParseJobTest {
     public void testParse_String_boolean() throws IOException {
         testBase.log(this.getClass(), "parse(String, boolean)");
         
-        File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-        if(file == null) {
+        final Path path = testBase.findAnyPathEndingWith(".html", null);
+        if(path == null) {
             return;
         }
-        String source = testBase.getContents(file);
+        final String source = testBase.getContents(path.toFile());
         ParseJob instance = new ParseJob();
         instance.comments(false).plainText(true).maxSeparators(2);
         instance.separator("\n");
@@ -161,11 +161,11 @@ public class ParseJobTest {
     public void testParse_Reader_boolean() throws IOException {
         testBase.log(this.getClass(), "parse(Reader, boolean)");
         
-        File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-        if(file == null) {
+        final Path path = testBase.findAnyPathEndingWith(".html", null);
+        if(path == null) {
             return;
         }
-        try(Reader source = testBase.getReader(file)) {
+        try(Reader source = testBase.getReader(path.toFile())) {
             ParseJob instance = new ParseJob();
             instance.comments(false).plainText(true).maxSeparators(1);
             instance.separator("\n");

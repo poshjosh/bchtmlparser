@@ -1,7 +1,5 @@
 package com.bc.htmlparser;
 
-import com.bc.testutil.TestBaseImpl;
-
 /**
  * @author USER
  */

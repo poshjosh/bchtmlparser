@@ -1,8 +1,7 @@
 package com.bc.htmlparser;
 
-import com.bc.testutil.TestBase;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import org.junit.Test;
@@ -41,11 +40,11 @@ public class HtmlParserCallbackTest {
         
         String source;
         if(userSelectSource) {
-            File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-            if(file == null) {
+            final Path path = testBase.findAnyPathEndingWith(".html", null);
+            if(path == null) {
                 return;
             }
-            source = testBase.getContents(file);
+            source = testBase.getContents(path.toFile());
         }else{
             source = this.getSampleSource(); 
         }
@@ -70,11 +69,11 @@ public class HtmlParserCallbackTest {
         
         String source;
         if(userSelectSource) {
-            File file = testBase.promptUserToSelectSource(this.exitOnDialogCanel);
-            if(file == null) {
+            final Path path = testBase.findAnyPathEndingWith(".html", null);
+            if(path == null) {
                 return;
             }
-            source = testBase.getContents(file);
+            source = testBase.getContents(path.toFile());
         }else{
             source = this.getSampleSource(); 
         }
