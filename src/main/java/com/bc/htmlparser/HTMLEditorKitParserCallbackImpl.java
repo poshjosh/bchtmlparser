@@ -160,10 +160,12 @@ logger.log(Level.FINER, "{0}. End of line: {1}", new Object[] {logger.getName(),
     @Override
     public void handleText(char []data, int pos) {
         
-if(logger.isLoggable(Level.FINER)) {           
-    logger.log(Level.FINER, "{0}. Text: {1}, at {2}", 
-    new Object[] {logger.getName(), CharBuffer.wrap(data), pos});
-}
+//        System.out.println("Text: " +CharBuffer.wrap(data) + ", at pos: " + pos);
+        
+        if(logger.isLoggable(Level.FINER)) {           
+            logger.log(Level.FINER, "Text: {0}, at {1}", 
+            new Object[] {CharBuffer.wrap(data), pos});
+        }
 
         appendData(data);
         
@@ -184,8 +186,7 @@ if(logger.isLoggable(Level.FINER)) {
 
     protected void appendData(char [] data) {
         if (data != null) {
-if(logger.isLoggable(Level.FINER))                
-logger.log(Level.FINER, "Appending: {0}", CharBuffer.wrap(data));
+            logger.finer(() -> "Appending: " + CharBuffer.wrap(data));
             buffer.append(data);
         }
     }
@@ -199,14 +200,18 @@ logger.log(Level.FINER, "Appending: {0}", CharBuffer.wrap(data));
     }
     
     protected void appendSeparator(boolean log) {
-        boolean mayAppend = separator != null && separatorsAppended < maxSeparatorsBetweenText; 
-if(logger.isLoggable(Level.FINER))                
-logger.log(Level.FINER, "Will append separator: {0}, separator: {1}, seperators appended: {2}, content: ...{3}", 
-        new Object[]{mayAppend, separator, separatorsAppended, buffer.subSequence(buffer.length()<30?0:buffer.length()-30, buffer.length())});
-
+        
+        final boolean mayAppend = separator != null && separatorsAppended < maxSeparatorsBetweenText; 
+        
+        if(logger.isLoggable(Level.FINER)) {                
+                logger.log(Level.FINER, "Will append separator: {0}, separator: {1}, seperators appended: {2}, content: ...{3}", 
+                new Object[]{mayAppend, separator, separatorsAppended, buffer.subSequence(buffer.length()<30?0:buffer.length()-30, buffer.length())});
+        } 
+        
 if(log) System.out.println("Will append separator: "+mayAppend+", separator: "+separator+
         ", seperators appended: "+separatorsAppended+
         ", content: ..."+buffer.subSequence(buffer.length()<30?0:buffer.length()-30, buffer.length()));
+
         if (mayAppend) {
             buffer.append(separator);
             ++separatorsAppended;

@@ -281,8 +281,8 @@ public class ParseJob extends ParserDelegator {
             this.tagsToReject = this.add(tagsToReject, HTML.Tag.SCRIPT);
         }
         if(!acceptStyleText) {
-        // Assigment very important
-        this.tagsToReject = this.add(tagsToReject, HTML.Tag.STYLE);
+            // Assigment very important
+            this.tagsToReject = this.add(tagsToReject, HTML.Tag.STYLE);
         }
         return this;
     }
@@ -353,12 +353,12 @@ public class ParseJob extends ParserDelegator {
     }
     
     private <T> Filter<T> and(List<Filter<T>> filterList) {
-        return filterList.isEmpty() ? (t) -> false : filterList.size() == 1 ?
+        return filterList.isEmpty() ? (t) -> true : filterList.size() == 1 ?
                 filterList.get(0) : new AndFilter(filterList);
     }
     
     private <T> Filter<T> or(List<Filter<T>> filterList) {
-        return filterList.isEmpty() ? (t) -> false : filterList.size() == 1 ?
+        return filterList.isEmpty() ? (t) -> true : filterList.size() == 1 ?
                 filterList.get(0) : new OrFilter(filterList);
     }
 

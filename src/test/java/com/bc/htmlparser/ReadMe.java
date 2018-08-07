@@ -15,7 +15,7 @@ public class ReadMe {
             
             // The HTML content to parse
             //
-            String html = 
+            final String html = 
             "<html>\n<head><title>This is the Title</title><link rel=\"_rel\" href=\"_href\"></head>" + 
             "\n<body>\n<h2>This is the Heading</h2>" +
             "\n<div id=\"page-data\" class=\"content-main\">This is some content</div>" +
